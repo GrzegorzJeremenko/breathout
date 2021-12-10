@@ -27,9 +27,9 @@
 
         console.log(latitude + " " + longitude)
 
-        this.getCityName(position)
+        this.getLocationData(position)
       },
-      getCityName: function(position) {
+      getLocationData: function(position) {
         let latitude  = position.coords.latitude
         let longitude = position.coords.longitude
 
@@ -38,14 +38,20 @@
           url: `https://nominatim.openstreetmap.org/reverse?format=xml&lat=${ latitude }&lon=${ longitude }&zoom=18&addressdetails=1`,
         }).then((res) => {
           if(res.status === 200) {
-            let n = JSON.parse(convert.xml2json(res.data, {compact: true, spaces: 4})).reversegeocode.addressparts
-
-            let city = n.city._text
-            let country = n.country._text
-
-            this.$refs.city.value = city + ", " + country
+            this.parseLocation(res.data)
           }
         })
+      },
+      parseLocation: function(xml) {
+        let n = JSON.parse(convert.xml2json(xml, {
+          compact: true,
+          spaces: 4
+        })).reversegeocode.addressparts
+
+        let city = n.city._text
+        let country = n.country._text
+
+        this.$refs.city.value = city + ", " + country
       }
     },
     created: function() {
