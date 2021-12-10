@@ -7,15 +7,17 @@
       <form>
         <input
           type="text"
+          ref="city"
           placeholder="Miasto, np. Katowice">
-
-          <button v-on:click="getLoc">Test</button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
+  const axios = require('axios')
+  const convert = require('xml-js');
+
   export default {
     name: 'Search', 
     methods: {
@@ -23,7 +25,27 @@
         let latitude  = position.coords.latitude
         let longitude = position.coords.longitude
 
-        alert(latitude + " " + longitude)
+        console.log(latitude + " " + longitude)
+
+        this.getCityName(position)
+      },
+      getCityName: function(position) {
+        let latitude  = position.coords.latitude
+        let longitude = position.coords.longitude
+
+        axios({
+          method: 'GET',
+          url: `https://nominatim.openstreetmap.org/reverse?format=xml&lat=${ latitude }&lon=${ longitude }&zoom=18&addressdetails=1`,
+        }).then((res) => {
+          if(res.status === 200) {
+            let json = JSON.parse(convert.xml2json(res.data, {compact: true, spaces: 4}))
+
+            let city = json.reversegeocode.addressparts.city._text
+            let country = json.reversegeocode.addressparts.country._text
+
+            this.$refs.city.value = city + ", " + country
+          }
+        })
       }
     },
     created: function() {
