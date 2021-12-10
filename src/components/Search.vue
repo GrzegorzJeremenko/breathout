@@ -38,10 +38,10 @@
           url: `https://nominatim.openstreetmap.org/reverse?format=xml&lat=${ latitude }&lon=${ longitude }&zoom=18&addressdetails=1`,
         }).then((res) => {
           if(res.status === 200) {
-            let location = JSON.parse(convert.xml2json(res.data, {compact: true, spaces: 4})).reversegeocode.addressparts
+            let n = JSON.parse(convert.xml2json(res.data, {compact: true, spaces: 4})).reversegeocode.addressparts
 
-            let city = location.city._text
-            let country = location.country._text
+            let city = n.city._text
+            let country = n.country._text
 
             this.$refs.city.value = city + ", " + country
           }
