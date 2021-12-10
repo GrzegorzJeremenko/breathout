@@ -38,10 +38,10 @@
           url: `https://nominatim.openstreetmap.org/reverse?format=xml&lat=${ latitude }&lon=${ longitude }&zoom=18&addressdetails=1`,
         }).then((res) => {
           if(res.status === 200) {
-            let json = JSON.parse(convert.xml2json(res.data, {compact: true, spaces: 4}))
+            let location = JSON.parse(convert.xml2json(res.data, {compact: true, spaces: 4}))
 
-            let city = json.reversegeocode.addressparts.city._text
-            let country = json.reversegeocode.addressparts.country._text
+            let city = location.reversegeocode.addressparts.city._text
+            let country = location.reversegeocode.addressparts.country._text
 
             this.$refs.city.value = city + ", " + country
           }
@@ -94,7 +94,7 @@
 
   div.search form input[type=text] {
     width: 100%;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Comfortaa', cursive;
     border: none;
     padding: 15px 10px 15px 45px;
     background-color: #fff;
