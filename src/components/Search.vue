@@ -58,7 +58,7 @@
 
         let city = '';
 
-        if(json.city === null)
+        if(json.city === undefined)
           city = json.town._text
         else
           city = json.city._text
