@@ -51,15 +51,19 @@
         })
       },
       parseLocation: function(xml) {
-        console.log(xml)
         let json = JSON.parse(convert.xml2json(xml, {
           compact: true,
           spaces: 4
         })).reversegeocode.addressparts
 
-        console.log(json)
+        let city = '';
 
-        let city = json.city._text
+        if(json.city === null)
+          city = json.town._text
+        else
+          city = json.city._text
+        
+        
         let country = json.country._text
 
         this.$refs.city.value = city + ", " + country
