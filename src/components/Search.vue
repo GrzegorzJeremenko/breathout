@@ -1,10 +1,10 @@
 <template>
-  <div class="search" :style="{ padding: type ? '0 0 40px 0' : '40px 0 40px 0', position: type ? 'fixed' : 'static'}">
+  <div class="search" :style="{ padding: type ? '0 0 40px 0' : '40px 0 10px 0', position: type ? 'fixed' : 'static'}">
     <div class="inside">
       <h1 :style="{ display: type ? 'none' : 'block'}">
         Dziki dech<br/>w twojej okolicy
       </h1>
-      <form :style="{ flexDirection: type ? 'row' : 'column', width: type ? '100%' : '80%', margin: type ? '20px 0 0 0' : '40px 0 20px 0'}">
+      <form :style="{ flexDirection: type ? 'row' : 'column', width: type ? '100%' : '80%', margin: type ? '40px 0 -20px 0' : '40px 0 20px 0'}">
         <input
           type="text"
           ref="city"
@@ -70,8 +70,8 @@
       }
     },
     created: function() {
-      navigator.geolocation.getCurrentPosition(this.success, function(err) {
-        console.log("Unable to retrieve your location" + " " + err.message + " " + err.code)
+      navigator.geolocation.getCurrentPosition(this.success, function() {
+        console.log("Unable to retrieve your location.")
       })
 
       window.addEventListener('scroll', this.onScroll)
@@ -88,14 +88,15 @@
   div.search {
     position: fixed;
     top: 0;
+    margin: -20px 0 0 0;
     z-index: 10000;
     width: 100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #2ecc71;
-    padding: 40px 0 40px 0;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 95%);
+    padding: 40px 0 10px 0;
+    border-radius: 20px;
   }
 
   div.search div.inside {

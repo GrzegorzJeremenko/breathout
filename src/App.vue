@@ -54,7 +54,7 @@
   body {
     line-height: 1;
     margin: 0 !important;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Comfortaa', cursive;
     background-color: #eee;
   }
 

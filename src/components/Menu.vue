@@ -29,8 +29,8 @@
 	flex-direction: row;
 	width: 100vw;
 	background-color: #2ecc71;
-	height: 80px;
-	border-radius: 0;
+	height: 100px;
+	border-radius: 20px;
 	justify-content: space-around;
 	align-items: center;
   }
@@ -39,10 +39,10 @@
 	margin: -20px 0 0 0;
 	color: #fff;
 	font-size: 25px;
-	width: 60px;
-	height: 60px;
+	width: 80px;
+	height: 80px;
 	text-align: center;
-	line-height: 60px;
+	line-height: 80px;
   }
 
   div.menu div.master {
@@ -50,7 +50,7 @@
 	height: 80px;
 	color: #fff;
 	background-color: #e67e22;
-	margin: -70px 0 0 0;
+	margin: -80px 0 0 0;
 	font-size: 30px;
 	line-height: 80px;
 	border-radius: 90px;
