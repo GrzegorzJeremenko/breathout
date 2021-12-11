@@ -1,21 +1,20 @@
 <template>
     <div class="place">
         <div class="gallery-container">
-            <div class="gallery">
-                <div class="image"></div>
-                <div class="image"></div>
-                <div class="image"></div>
+            <div class="gallery" ref="galler">
+                <div class="image" v-for="image in place.images" :key="image" :style="{ backgroundImage: 'url(data:image/png;base64,' + image + ')' }"></div>
             </div>
             <div class="top">
-                <h1>Skałki</h1>
-                <i class="icon-star-empty"></i>
+                <h1>{{ place.name }}</h1>
+                <i v-if="fav" v-on:click="delFromFav" class="icon-star"></i>
+                <i v-else v-on:click="addToFav" class="icon-star-empty"></i>
             </div>
         </div>
         <div class="inside">
             <label>Co to za miejsce?</label>
 
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut accumsan massa, non dapibus odio. Morbi in elit est. Vivamus aliquam, mi non tristique consequat, elit dolor mattis turpis, non pellentesque justo dui sit amet est. Morbi sagittis libero elit, in placerat elit vestibulum sit amet.
+               {{ place.description }}
             </p>
 
             <div id="mapContainer"></div>
@@ -23,8 +22,10 @@
             <label>Jak dotrzeć?</label>
 
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut accumsan massa, non dapibus odio. Morbi in elit est. Vivamus aliquam, mi non tristique consequat, elit dolor mattis turpis, non pellentesque justo dui sit amet est. Morbi sagittis libero elit, in placerat elit vestibulum sit amet.
+                {{ place.instructions }}
             </p>
+
+            <a :href="'http://www.google.com/maps/place/' + place.lat + ',' + place.lon" target="_blank"><button>Nawiguj</button></a>
         </div>
     </div>
 </template>
@@ -41,7 +42,8 @@
     name: 'Place',
     data() {
         return {
-            place: Object
+            place: Object,
+            fav: false
         }
     },
     created: function() {
@@ -49,19 +51,31 @@
         .then((res) => {
             this.place = res.data
             console.log(res)
+
+            this.$refs.galler.style.width = 100 * this.place.images.length + "%"
+            this.genMap()
         })
         .catch(() => {
             this.navigateTo('/')
         })
+    },
+    mounted: function() {
+        if(localStorage.getItem("fav") != undefined) {
+            let json = JSON.parse(localStorage.getItem("fav"))
+
+            json.forEach(jso => {
+                if(jso.id == this.place._id)
+                    this.fav = true
+            });
+        }
     },
     methods: {
         navigateTo: function(subpage) {
             if(this.$route.path != subpage) 
             this.$router.push(subpage)
         },
-    },
-    mounted: function() {
-        let map = new Map({
+        genMap: function() {
+            let map = new Map({
             target: 'mapContainer',
             layers: [
                 new TileLayer({
@@ -69,7 +83,7 @@
                 }),
             ],
             view: new View({
-                center: fromLonLat([19.1949126, 50.3216897]),
+                center: fromLonLat([this.place.lon, this.place.lat]),
                 zoom: 16,
                 constrainResolution: true
             }),
@@ -87,9 +101,54 @@
             stopEvent: false
         })
 
-        marker.setPosition(fromLonLat([19.1949126, 50.3216897]))
+        marker.setPosition(fromLonLat([this.place.lon, this.place.lat]))
 
         map.addOverlay(marker)
+        },
+        addToFav: function() {
+            if(localStorage.getItem("fav") != undefined) {
+                let json = JSON.parse(localStorage.getItem("fav"))
+
+                json.push(new Object({ id: this.place._id }))
+
+                localStorage.setItem("fav", JSON.stringify(json))
+
+                json.forEach(jso => {
+                    if(jso.id == this.place._id)
+                        this.fav = true
+                });
+            } else {
+                let json = [];
+                json.push(new Object({ id: this.place._id }))
+
+                localStorage.setItem("fav", JSON.stringify(json))
+
+                this.fav = false
+
+                json.forEach(jso => {
+                    if(jso.id == this.place._id)
+                        this.fav = true
+                });
+            }
+        },
+        delFromFav: function() {
+            if(localStorage.getItem("fav") != undefined) {
+                let json = JSON.parse(localStorage.getItem("fav"))
+
+                json = json.filter((el) => {
+                    return el.id !== this.place._id
+                })
+
+                localStorage.setItem("fav", JSON.stringify(json))
+
+                this.fav = false
+
+                json.forEach(jso => {
+                    if(jso.id == this.place._id)
+                        this.fav = true
+                });
+            } 
+        }
     }
   }
 </script>
@@ -174,5 +233,21 @@
     div.place div.inside div#mapContainer {
         height: 300px;
         margin: 20px 0 20px 0;
+    }
+
+    div.place div.inside a button {
+        width: 100%;
+        font-family: 'Comfortaa', cursive;
+        background-color: #2ecc71;
+        box-sizing: border-box;
+        color: #fff;
+        border: none;
+        height: 49px;
+        cursor: pointer;
+        border-radius: 30px;
+        font-size: 16px;
+        margin: 30px 0 0 0;
+        letter-spacing: 2px;
+        font-weight: bold;
     }
 </style>

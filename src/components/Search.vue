@@ -34,7 +34,8 @@
         let latitude  = position.coords.latitude
         let longitude = position.coords.longitude
 
-        this.position = position;
+        localStorage.setItem("lat", latitude)
+        localStorage.setItem("lon", longitude)
 
         console.log(latitude + " " + longitude)
 
@@ -71,7 +72,7 @@
 
         this.$refs.city.value = city + ", " + country
 
-        setTimeout(async () => {this.$root.$emit('coord', this.position)}, 2000)
+        setTimeout(async () => {this.$root.$emit('coord')}, 1000)
       }
     },
     created: function() {

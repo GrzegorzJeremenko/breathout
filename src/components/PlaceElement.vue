@@ -1,6 +1,6 @@
 <template>
   <li>
-      <div class="image" :style="{backgroundImage: image}"></div>
+      <div class="image" v-on:click="navigateTo('/place/' + place._id)" :style="{backgroundImage: image}"></div>
       <div class="data">
           <h1>{{ name }}</h1>
           <div class="stars">
@@ -16,7 +16,8 @@
               <i class="icon-paw"></i>
           </div>
           <div class="fav">
-            <i class="icon-star-empty"></i>
+            <i v-if="fav" v-on:click="delFromFav" class="icon-star"></i>
+            <i v-else v-on:click="addToFav" class="icon-star-empty"></i>
           </div>
       </div>
   </li>
@@ -30,7 +31,8 @@
     },
     data() {
         return {
-            distance: 'Liczę...'
+            distance: 'Liczę...',
+            fav: false
         }
     },
     computed: {
@@ -57,10 +59,13 @@
         },
     },
     methods: {
-        countDist: function(position) {
-            console.log("twat")
-            let lat1 = position.coords.latitude
-            let lon1 = position.coords.longitude
+        navigateTo: function(subpage) {
+            if(this.$route.path != subpage) 
+            this.$router.push(subpage)
+        },
+        countDist: function() {
+            let lat1 = localStorage.getItem("lat")
+            let lon1 = localStorage.getItem("lon")
 
             let lat2 = this.place.lat
             let lon2 = this.place.lon
@@ -75,12 +80,68 @@
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
             this.distance = Math.floor(R * c / 1000) + " km od ciebie"; // in metres
+        },
+        addToFav: function() {
+            if(localStorage.getItem("fav") != undefined) {
+                let json = JSON.parse(localStorage.getItem("fav"))
+
+                json.push(new Object({ id: this.place._id }))
+
+                localStorage.setItem("fav", JSON.stringify(json))
+
+                json.forEach(jso => {
+                    if(jso.id == this.place._id)
+                        this.fav = true
+                });
+            } else {
+                let json = [];
+                json.push(new Object({ id: this.place._id }))
+
+                localStorage.setItem("fav", JSON.stringify(json))
+
+                this.fav = false
+
+                json.forEach(jso => {
+                    if(jso.id == this.place._id)
+                        this.fav = true
+                });
+            }
+        },
+        delFromFav: function() {
+            if(localStorage.getItem("fav") != undefined) {
+                let json = JSON.parse(localStorage.getItem("fav"))
+
+                json = json.filter((el) => {
+                    return el.id !== this.place._id
+                })
+
+                localStorage.setItem("fav", JSON.stringify(json))
+
+                this.fav = false
+
+                json.forEach(jso => {
+                    if(jso.id == this.place._id)
+                        this.fav = true
+                });
+            } 
         }
     },
     mounted: function() {
-        this.$root.$on('coord', (position) => {
-            this.countDist(position)
+        if(localStorage.getItem("lon") != undefined) 
+            this.countDist()
+
+        this.$root.$on('coord', () => {
+            this.countDist()
         })
+
+        if(localStorage.getItem("fav") != undefined) {
+            let json = JSON.parse(localStorage.getItem("fav"))
+
+            json.forEach(jso => {
+                if(jso.id == this.place._id)
+                    this.fav = true
+            });
+        }
     }
   }
 </script>
