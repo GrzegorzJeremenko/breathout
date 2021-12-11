@@ -1,27 +1,42 @@
 <template>
   <div class="home">
     <ul>
-      <Place />
+      <PlaceElement
+      v-for="place in places"
+      :key="place._id"
+      :place="place" />
     </ul>
   </div>
 </template>
 
 <script>
-  import Place from '@/components/Place.vue'
+  import PlaceElement from '@/components/PlaceElement.vue'
+
+  import { getPlaces } from '@/services/place.js'
 
   export default {
     name: 'Home',
     components: {
-      Place
+      PlaceElement
     },
     data() {
       return {
-        places: [
-          {
-            name: 'Skałki',
-            
-          }
-        ]
+        places: Object
+      }
+    },
+    created: function() {
+      this.getPlacesList()
+    },
+    methods: {
+      getPlacesList: function() {
+        getPlaces(this.$route.params._id)
+        .then((res) => {
+            this.places = res.data.data
+            console.log(res)
+        })
+        .catch(() => {
+            setTimeout(this.getPlacesList, 5000)
+        })
       }
     }
   }
@@ -38,5 +53,6 @@
 
   div.home ul {
     width: 90%;
+    margin: 0 0 100px 0;
   }
 </style>

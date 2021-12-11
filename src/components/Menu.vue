@@ -3,7 +3,7 @@
 	<div class="subpage">
 		<i class="icon-star"></i>
 	</div>
-	<div class="subpage master">
+	<div v-on:click="$router.push('/place/5')" class="subpage master">
 		<i class="icon-search"></i>
 	</div>
 	<div class="subpage">

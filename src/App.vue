@@ -56,6 +56,7 @@
     margin: 0 !important;
     font-family: 'Comfortaa', cursive;
     background-color: #eee;
+    -webkit-overflow-scrolling: touch;
   }
 
   ol, ul {

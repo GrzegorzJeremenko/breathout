@@ -77,6 +77,12 @@
       "css": "paw",
       "code": 61872,
       "src": "fontawesome"
+    },
+    {
+      "uid": "0d08dbb1dd648a43bdea81b7e6c9e036",
+      "css": "location",
+      "code": 59397,
+      "src": "fontawesome"
     }
   ]
 }

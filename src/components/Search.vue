@@ -1,5 +1,5 @@
 <template>
-  <div class="search" :style="{ padding: type ? '0 0 40px 0' : '40px 0 10px 0', position: type ? 'fixed' : 'static'}">
+  <div class="search" :style="{ padding: type ? '0 0 40px 0' : '40px 0 10px 0', position: type ? 'fixed' : 'static'}" v-show="$route.path === '/'">
     <div class="inside">
       <h1 :style="{ display: type ? 'none' : 'block'}">
         Dziki dech<br/>w twojej okolicy
@@ -26,12 +26,15 @@
       return {
         lastScrollY: 0,
         type: false,
+        position: null
       }
     },
     methods: {
-      success: function(position) {
+      success: async function(position) {
         let latitude  = position.coords.latitude
         let longitude = position.coords.longitude
+
+        this.position = position;
 
         console.log(latitude + " " + longitude)
 
@@ -67,6 +70,8 @@
         let country = json.country._text
 
         this.$refs.city.value = city + ", " + country
+
+        setTimeout(async () => {this.$root.$emit('coord', this.position)}, 2000)
       }
     },
     created: function() {
