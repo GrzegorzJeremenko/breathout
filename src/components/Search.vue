@@ -63,8 +63,8 @@
       }
     },
     created: function() {
-      navigator.geolocation.getCurrentPosition(this.success, function() {
-        console.log("Unable to retrieve your location")
+      navigator.geolocation.getCurrentPosition(this.success, function(err) {
+        console.log("Unable to retrieve your location" + " " + err.message + " " + err.code)
       })
 
       window.addEventListener('scroll', this.onScroll)
