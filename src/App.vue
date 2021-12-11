@@ -1,16 +1,24 @@
 <template>
   <div id="app">
     <Search />
-    <router-view/>
+    <transition name="fade" mode="out-in">
+      <router-view/>
+    </transition>
+    <Menu />
   </div>
 </template>
 
 <script>
   import Search from '@/components/Search.vue'
+  import Menu from '@/components/Menu.vue'
+
+  import "@/assets/css/fontello.css";
+  import "@/assets/css/animation.css";
 
   export default {
     components: {
-      Search
+      Search,
+      Menu
     }
   }
 </script>
@@ -43,14 +51,11 @@
     display: block;
   }
 
-  html {
-    overflow: hidden;
-  }
-
   body {
     line-height: 1;
     margin: 0 !important;
     font-family: 'Open Sans', sans-serif;
+    background-color: #eee;
   }
 
   ol, ul {
@@ -70,5 +75,13 @@
   table {
     border-collapse: collapse;
     border-spacing: 0;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>
