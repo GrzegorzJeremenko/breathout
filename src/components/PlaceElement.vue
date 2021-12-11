@@ -49,8 +49,8 @@
             return "url(data:image/png;base64," + this.place.images[0] + ")"
         },
         name: function() {
-            if(this.place.name.length > 8)
-					return this.place.name.substr(0, 8) + '...'
+            if(this.place.name.length > 11)
+					return this.place.name.substr(0, 13) + '...'
 				else
 					return this.place.name
         },
@@ -175,7 +175,7 @@
   }
 
   li div.data h1 {
-      font-size: 7vw;
+      font-size: 6vw;
       margin: 10px 0 10px 0;
   }
 

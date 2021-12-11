@@ -22,12 +22,12 @@ const getPlaces = () => {
 	})
 }
 
-const getPlacesWithFilter = (body) => {
+const getPlacesWithFilter = (params) => {
 	return new Promise((resolve, reject) => {
 		axios({
 			method: 'GET',
 			url: `${ config.serverAdress }/api/v1/places`,
-            data: body
+            params
 		})
 		.then((res) => {
 			switch(res.status) {

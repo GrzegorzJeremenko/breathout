@@ -35,6 +35,8 @@
                     {{ tagName(tag) }}
                 </li>
             </ul>
+
+            <label>Oceń miejsce</label>
         </div>
     </div>
 </template>
