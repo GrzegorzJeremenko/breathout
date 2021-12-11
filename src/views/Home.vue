@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <h1>Proponowane miejsca:</h1>
     <ul>
       <PlaceElement
       v-for="place in places"
@@ -32,7 +33,6 @@
         getPlaces(this.$route.params._id)
         .then((res) => {
             this.places = res.data.data
-            console.log(res)
         })
         .catch(() => {
             setTimeout(this.getPlacesList, 5000)
@@ -49,6 +49,11 @@
     flex-direction: column;
     align-items: center;
     margin: 20px 0 0 0;
+  }
+
+  div.home h1 {
+    font-size: 20px;
+    margin: 0 0 20px 0;
   }
 
   div.home ul {

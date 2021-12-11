@@ -1,9 +1,9 @@
 <template>
   <div class="menu">
-	<div class="subpage">
+	<div v-on:click="navigateTo('/favourite')" class="subpage">
 		<i class="icon-star"></i>
 	</div>
-	<div v-on:click="$router.push('/place/5')" class="subpage master">
+	<div v-on:click="navigateTo('/')" class="subpage master">
 		<i class="icon-search"></i>
 	</div>
 	<div class="subpage">
@@ -15,6 +15,12 @@
 <script>
   export default {
 	name: 'Menu',
+	methods: {
+		navigateTo: function(subpage) {
+			if(this.$route.path != subpage) 
+				this.$router.push(subpage)
+		},
+	}
   }
 </script>
 

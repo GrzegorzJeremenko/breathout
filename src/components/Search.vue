@@ -1,16 +1,16 @@
 <template>
-  <div class="search" :style="{ padding: type ? '0 0 40px 0' : '40px 0 10px 0', position: type ? 'fixed' : 'static'}" v-show="$route.path === '/'">
+  <div class="search" :style="{ padding: $route.path === '/search' ? '0 0 40px 0' : '40px 0 10px 0', position: $route.path === '/search' ? 'fixed' : 'static'}" v-show="$route.path === '/' || $route.path === '/search'">
     <div class="inside">
-      <h1 :style="{ display: type ? 'none' : 'block'}">
+      <h1 :style="{ display: $route.path === '/search' ? 'none' : 'block'}">
         Dziki dech<br/>w twojej okolicy
       </h1>
-      <form :style="{ flexDirection: type ? 'row' : 'column', width: type ? '100%' : '80%', margin: type ? '40px 0 -20px 0' : '40px 0 20px 0'}">
+      <form action="javascript: void(0);" :style="{ flexDirection: $route.path === '/search' ? 'row' : 'column', width: $route.path === '/search' ? '100%' : '80%', margin: $route.path === '/search' ? '40px 0 -20px 0' : '40px 0 20px 0'}">
         <input
           type="text"
           ref="city"
           placeholder="Miasto, np. Katowice">
 
-        <button :style="{ margin: type ? '0 0 0 10px' : '20px 0 0 0'}"><i class="icon-search"></i></button>
+        <button v-on:click="searchButton()" :style="{ margin: $route.path === '/search' ? '0 0 0 10px' : '20px 0 0 0'}"><i class="icon-search"></i></button>
       </form>
     </div>
   </div>
@@ -25,11 +25,22 @@
     data() {
       return {
         lastScrollY: 0,
-        type: false,
         position: null
       }
     },
     methods: {
+      searchButton: function() {
+        localStorage.setItem("city", this.$refs.city.value)
+
+        if(this.$route.path === '/search')
+          this.$root.$emit('searchRefresh')
+        else
+          this.navigateTo('/search')
+      },
+      navigateTo: function(subpage) {
+        if(this.$route.path != subpage) 
+          this.$router.push(subpage)
+      },
       success: async function(position) {
         let latitude  = position.coords.latitude
         let longitude = position.coords.longitude
@@ -164,10 +175,5 @@
     border-radius: 80px;
     margin: 20px 0 0 0;
     transition: all .3s ease;
-  }
-
-  div.search form button:hover {
-    background-color: #d35400;
-    border-bottom: 2px solid #e67e22;
   }
 </style>

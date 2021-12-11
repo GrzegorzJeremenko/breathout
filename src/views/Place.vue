@@ -19,18 +19,28 @@
 
             <div id="mapContainer"></div>
 
+            <a :href="'http://www.google.com/maps/place/' + place.lat + ',' + place.lon" target="_blank"><button>Nawiguj</button></a>
+
             <label>Jak dotrzeć?</label>
 
             <p>
                 {{ place.instructions }}
             </p>
 
-            <a :href="'http://www.google.com/maps/place/' + place.lat + ',' + place.lon" target="_blank"><button>Nawiguj</button></a>
+            <label>Jakie znajdę udogodnienia?</label>
+
+            <ul>
+                <li v-for="tag in place.tags" :key="tag">
+                    <i :class="tag"></i>
+                    {{ tagName(tag) }}
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
+    import 'ol/ol.css'
     import OSM from 'ol/source/OSM'
     import TileLayer from 'ol/layer/Tile'
     import { Map, View, Overlay } from 'ol'
@@ -50,7 +60,15 @@
         getPlace(this.$route.params._id)
         .then((res) => {
             this.place = res.data
-            console.log(res)
+
+            if(localStorage.getItem("fav") != undefined) {
+                let json = JSON.parse(localStorage.getItem("fav"))
+
+                json.forEach(jso => {
+                    if(jso.id == this.place._id)
+                        this.fav = true
+                });
+            }
 
             this.$refs.galler.style.width = 100 * this.place.images.length + "%"
             this.genMap()
@@ -58,18 +76,45 @@
         .catch(() => {
             this.navigateTo('/')
         })
-    },
-    mounted: function() {
-        if(localStorage.getItem("fav") != undefined) {
-            let json = JSON.parse(localStorage.getItem("fav"))
 
-            json.forEach(jso => {
-                if(jso.id == this.place._id)
-                    this.fav = true
-            });
-        }
+        window.addEventListener('scroll', this.imageScroll)
+    },
+    destroyed: function() {
+        window.removeEventListener('scroll', this.imageScroll)
     },
     methods: {
+        tagName: function(tag) {
+            switch(tag) {
+                case 'icon-fire':
+                    return 'Możliwość rozpalenia ogniska'
+
+                case 'icon-bicycle':
+                    return 'Możliwość dojazdu rowerem'
+                
+                case 'icon-motorcycle':
+                    return 'Możliwość dojazdu motocyklem'
+
+                case 'icon-food':
+                    return 'Możliwość zorganizowania pikniku'
+
+                case 'icon-child':
+                    return 'Możliwość spacerowania'
+
+                case 'icon-wheelchair':
+                    return 'Przystosowane dla osób z niepełnosprawnością'
+
+                case 'icon-paw':
+                    return 'Przyjazne dla zwierząt'
+
+                default:
+                    return ''
+            }
+        },
+        imageScroll: function() {
+            var all = document.getElementsByClassName('image');
+            for (var i = 0; i < all.length; i++)
+                all[i].style.backgroundPositionY = window.scrollY / 2 + "px";
+        },
         navigateTo: function(subpage) {
             if(this.$route.path != subpage) 
             this.$router.push(subpage)
@@ -165,7 +210,7 @@
         width: 90%;
         display: flex;
         flex-direction: column;
-        margin: 0 0 100px 0;
+        margin: 0 0 120px 0;
     }
 
     div.place div.gallery-container {
@@ -220,8 +265,12 @@
         color: #f1c40f;
     }
 
+    div.place div.inside label:first-child {
+        margin: 20px 0 5px -2px;
+    }
+
     div.place div.inside label {
-        margin: 0 0 5px -2px;
+        margin: 15px 0 5px -2px;
         color: #333;
     }
 
@@ -246,8 +295,25 @@
         cursor: pointer;
         border-radius: 30px;
         font-size: 16px;
-        margin: 30px 0 0 0;
+        margin: 0 0 10px 0;
         letter-spacing: 2px;
         font-weight: bold;
+    }
+
+    div.place div.inside ul {
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.place div.inside ul li {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 5px 0 5px -3px;
+    }
+
+    div.place div.inside ul li i {
+        font-size: 20px;
+        margin: 0 8px 0 0;
     }
 </style>

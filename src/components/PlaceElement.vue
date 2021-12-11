@@ -10,10 +10,7 @@
           </div>
           <h2>{{ distance }}</h2>
           <div class="amenitiesList">
-              <i class="icon-bicycle"></i>
-              <i class="icon-fire"></i>
-              <i class="icon-child"></i>
-              <i class="icon-paw"></i>
+              <i v-for="tag in place.tags" :key="tag" :class="tag"></i>
           </div>
           <div class="fav">
             <i v-if="fav" v-on:click="delFromFav" class="icon-star"></i>
@@ -157,7 +154,7 @@
     background-color: #fff;
     height: 160px;
     border-radius: 10px;
-    margin: 0 0 40px 0;
+    margin: 0 0 20px 0;
   }
 
   li div.image {

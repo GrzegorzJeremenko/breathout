@@ -22,6 +22,29 @@ const getPlaces = () => {
 	})
 }
 
+const getPlacesWithFilter = (body) => {
+	return new Promise((resolve, reject) => {
+		axios({
+			method: 'GET',
+			url: `${ config.serverAdress }/api/v1/places`,
+            data: body
+		})
+		.then((res) => {
+			switch(res.status) {
+				case 200:
+					resolve(res)
+					break
+
+				default:
+					reject()
+					break
+			}
+		})
+		.catch((err) => reject(err))
+	})
+}
+
+
 const getPlace = (id) => {
 	return new Promise((resolve, reject) => {
 		axios({
@@ -43,4 +66,4 @@ const getPlace = (id) => {
 	})
 }
 
-export { getPlace, getPlaces }
+export { getPlace, getPlaces, getPlacesWithFilter }

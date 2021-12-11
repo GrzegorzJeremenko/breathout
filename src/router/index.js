@@ -14,6 +14,16 @@ const routes = [
     name: 'Place',
     component: () => import('../views/Place.vue')
   },
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('../views/Search.vue')
+  },
+  {
+    path: '/favourite',
+    name: 'Favourite',
+    component: () => import('../views/Favourite.vue')
+  },
 ]
 
 const router = new VueRouter({
